@@ -32,6 +32,8 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
     uint256 public startBlock;
     // TOKEN tokens created per block.
     uint256 public tokenPerBlock;
+    // MAX TOKEN tokens created per block.
+    uint256 public maxTokenPerBlock;
     // Accumulated TOKENs per share, times 1e20.
     uint256 public constant accTokenPerShareMultiple = 1E20;
     // total TOKEN to be mint amount
@@ -50,11 +52,13 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
         address _token,
         uint256 _startBlock,
         uint256 _tokenPerBlock,
+        uint256 _maxTokenPerBlock,
         uint256 _totalToBeMintAmount
     ) public {
         token = ERC20(_token);
         startBlock = _startBlock;
         tokenPerBlock = _tokenPerBlock;
+        maxTokenPerBlock = _maxTokenPerBlock;
         totalToBeMintAmount = _totalToBeMintAmount;
     }
 
@@ -117,7 +121,7 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
     }
 
     function setTokenPerBlock(uint256 _tokenPerBlock) external override onlyOwner {
-        require(tokenPerBlock != _tokenPerBlock, 'NOT NEED UPDATE');
+        require(tokenPerBlock != _tokenPerBlock && _tokenPerBlock <= maxTokenPerBlock, 'FORBIDDEN');
         emit SetTokenPerBlock(msg.sender, _tokenPerBlock);
         tokenPerBlock = _tokenPerBlock;
     }
@@ -296,5 +300,4 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
     function unpauseStake() external override onlyOwner whenPaused {
         _unpause();
     }
-
 }

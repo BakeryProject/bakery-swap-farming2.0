@@ -137,6 +137,7 @@ describe('CommonStakeERC721EarnBakeFactory', () => {
         earnBakeMasterAddress[network.name],
         bakeMuskMixerAddress[network.name],
         defaultGetStakingPowerAddress[network.name],
+        false,
     )
     console.log(`createBakeMuskMixerCommonStakeERC721EarnBake ${createCommonStakeERC721EarnBakeTx.hash}`)
     await createCommonStakeERC721EarnBakeTx.wait()
@@ -155,6 +156,7 @@ describe('CommonStakeERC721EarnBakeFactory', () => {
         earnBakeMasterAddress[network.name],
         doggyEquipmentAddress[network.name],
         defaultGetStakingPowerAddress[network.name],
+        false,
     )
     console.log(`createDoggyEquipmentCommonStakeERC721EarnBake ${createCommonStakeERC721EarnBakeTx.hash}`)
     await createCommonStakeERC721EarnBakeTx.wait()
@@ -173,6 +175,7 @@ describe('CommonStakeERC721EarnBakeFactory', () => {
         earnBakeMasterAddress[network.name],
         barkingNFTAddress[network.name],
         defaultGetStakingPowerAddress[network.name],
+        false,
     )
     console.log(`createBarkingNFTCommonStakeERC721EarnBake ${createCommonStakeERC721EarnBakeTx.hash}`)
     await createCommonStakeERC721EarnBakeTx.wait()
@@ -191,6 +194,7 @@ describe('CommonStakeERC721EarnBakeFactory', () => {
         earnBakeMasterAddress[network.name],
         doggyNFTAddress[network.name],
         defaultGetStakingPowerAddress[network.name],
+        false,
     )
     console.log(`createDoggyNFTCommonStakeERC721EarnBake ${createCommonStakeERC721EarnBakeTx.hash}`)
     await createCommonStakeERC721EarnBakeTx.wait()
@@ -209,6 +213,7 @@ describe('CommonStakeERC721EarnBakeFactory', () => {
         earnBakeMasterAddress[network.name],
         bakerySoccerAddress[network.name],
         defaultGetStakingPowerAddress[network.name],
+        false,
     )
     console.log(`createBakerySoccerCommonStakeERC721EarnBake ${createCommonStakeERC721EarnBakeTx.hash}`)
     await createCommonStakeERC721EarnBakeTx.wait()
@@ -228,6 +233,7 @@ describe('CommonStakeERC721EarnBakeFactory', () => {
         earnBakeMasterAddress[network.name],
         carNFTAddress[network.name],
         getCarNFTStakingPowerAddress[network.name],
+        true,
     )
     console.log(`createCarNFTCommonStakeERC721EarnBake ${createCommonStakeERC721EarnBakeTx.hash}`)
     await createCommonStakeERC721EarnBakeTx.wait()
@@ -247,6 +253,7 @@ describe('CommonStakeERC721EarnBakeFactory', () => {
         earnBakeMasterAddress[network.name],
         comboNFT[network.name],
         getComboStakingPowerAddress[network.name],
+        false,
     )
     console.log(`createComboNFTCommonStakeERC721EarnBake ${createCommonStakeERC721EarnBakeTx.hash}`)
     await createCommonStakeERC721EarnBakeTx.wait()
@@ -266,6 +273,7 @@ describe('CommonStakeERC721EarnBakeFactory', () => {
         earnBakeMasterAddress[network.name],
         pokerCardAddress[network.name],
         getPokerCardStakingPowerAddress[network.name],
+        false,
     )
     console.log(`createPokerCardCommonStakeERC721EarnBake ${createCommonStakeERC721EarnBakeTx.hash}`)
     await createCommonStakeERC721EarnBakeTx.wait()

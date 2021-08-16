@@ -36,6 +36,7 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
     address public constant bakeryToken = 0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5;
     ICommonMaster public immutable bakeryMaster;
     IGetStakingPower public immutable getStakingPowerProxy;
+    bool public immutable isMintPowerTokenEveryTimes;
     mapping(uint256 => bool) private _mintPowers;
     mapping(address => UserInfo) private _userInfoMap;
     mapping(address => EnumerableSet.UintSet) private _stakingTokens;
@@ -45,11 +46,13 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
         string memory _symbol,
         address _bakeryMaster,
         address _erc721,
-        address _getStakingPower
+        address _getStakingPower,
+        bool _isMintPowerTokenEveryTimes
     ) public ERC20(_name, _symbol) {
         bakeryMaster = ICommonMaster(_bakeryMaster);
         erc721 = IERC721(_erc721);
         getStakingPowerProxy = IGetStakingPower(_getStakingPower);
+        isMintPowerTokenEveryTimes = _isMintPowerTokenEveryTimes;
     }
 
     function getStakingPower(uint256 _tokenId) public view override returns (uint256) {
@@ -109,8 +112,9 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
         UserInfo storage userInfo = _userInfoMap[_msgSender()];
         _harvest(userInfo);
         uint256 stakingPower = getStakingPower(_tokenId);
-        if (!_mintPowers[_tokenId]) {
+        if (isMintPowerTokenEveryTimes || !_mintPowers[_tokenId]) {
             _mint(address(this), stakingPower);
+            _mintPowers[_tokenId] = true;
         }
 
         erc721.safeTransferFrom(_msgSender(), address(this), _tokenId);
@@ -140,6 +144,9 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
         bakeryMaster.unstake(address(this), stakingPower);
         totalStakingPower = totalStakingPower.sub(stakingPower);
         userInfo.rewardDebt = userInfo.stakingPower.mul(accBakePerShare).div(accBakePerShareMultiple);
+        if (isMintPowerTokenEveryTimes) {
+            _burn(address(this), stakingPower);
+        }
         emit Unstake(_msgSender(), _tokenId, stakingPower);
     }
 
@@ -196,22 +203,6 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
         } else {
             IERC20(bakeryToken).transfer(_to, _amount);
         }
-    }
-
-    function transferOtherERC20Token(address tokenAddress, uint256 amount) public onlyOwner {
-        require(
-            tokenAddress != bakeryToken && tokenAddress != address(erc721) && tokenAddress != address(this),
-            'FORBIDDEN'
-        );
-        IERC20(tokenAddress).transfer(owner(), amount);
-    }
-
-    function transferOtherERC721Token(address tokenAddress, uint256 tokenId) public onlyOwner {
-        require(
-            tokenAddress != bakeryToken && tokenAddress != address(erc721) && tokenAddress != address(this),
-            'FORBIDDEN'
-        );
-        IERC721(tokenAddress).transferFrom(address(this), owner(), tokenId);
     }
 
     function getUserInfo(address user)

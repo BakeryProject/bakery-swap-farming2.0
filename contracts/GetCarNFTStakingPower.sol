@@ -3,6 +3,7 @@
 pragma solidity =0.6.6;
 
 import './IGetStakingPower.sol';
+
 // bsc mainnet carNFT contract 0x1D09fC4B295a2fa6F0E2E64a345BAE419EB04699
 interface ICarNFT {
     function carInfoMap(uint256 _tokenId)

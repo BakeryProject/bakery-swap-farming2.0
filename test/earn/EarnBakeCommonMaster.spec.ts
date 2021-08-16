@@ -38,10 +38,6 @@ const carAddress: { [name: string]: string } = {
   bsct: '0xA942C0A2D901C74ea2382cdD6B82acD771494130',
   bsc: '0x176a25637e5078519230A4d80A7A47350940264a',
 }
-const tctBusdBlpAddress: { [name: string]: string } = {
-  bsct: '0xc1B451Be06656c1bD9d5d6880a013dA196a5f38f',
-  bsc: '0x6c4109De1fE903216e304ba5fcFEB9f88de219Ba',
-}
 const pokerBnbBlpAddress: { [name: string]: string } = {
   bsct: '0x21fCEB6B694949F8abfAc84BE855daF641931e00',
   bsc: '0x5a8e5f77a2922395ADCdf54ce8c0593882bD0Cfc',
@@ -50,57 +46,21 @@ const pokerAddress: { [name: string]: string } = {
   bsct: '0x4d4e595d643dc61EA7FCbF12e4b1AAA39f9975B8',
   bsc: '0x82caA54eC9aAF213FF611aF63d4B650ACcFF53ae',
 }
-// const xDittoBnbBlpAddress: { [name: string]: string } = {
-//   bsct: '0x05435c0657f0193619921d66d562DCee027cb7eb',
-//   bsc: '0x6f6fd56553F47e438BD47560f25B10834E6a39c9',
-// }
-const soccerBakeBlpAddress: { [name: string]: string } = {
-  bsct: '0xb487351823F3e8f88b10ADbF96d4a4E39Daf0da5',
+const soccerBnbBlpAddress: { [name: string]: string } = {
+  bsct: '0x7aded9622DED9E2CA77E2058Ba23d003A771BB8a',
   bsc: '0xb487351823F3e8f88b10ADbF96d4a4E39Daf0da5',
 }
 const soccerAddress: { [name: string]: string } = {
   bsct: '0x338d44d19c8d45ed9771b8D2B95D988F0e42187F',
   bsc: '0x338d44d19c8d45ed9771b8D2B95D988F0e42187F',
 }
-const autoBnbBlpAddress: { [name: string]: string } = {
-  bsct: '0x95dDBe91724Eb58dc068979F35E2D3e4646D5aCF',
-  bsc: '0xDF388EF85179b239898DB0f6B9eA44f640042876',
-}
-const bakeBatBlpAddress: { [name: string]: string } = {
-  bsct: '0xF1785c979E822134b6D5A9B23Bd75126388B23Df',
-  bsc: '0x675Ec26cF1c99A5cD227658f5d0e2fAcbbf3Dcf7',
-}
-// const bakeMxBlpAddress: { [name: string]: string } = {
-//   bsct: '0x22ca1a9ac0c9393b86f4097b7bd9d003cb12acf2',
-//   bsc: '0x0af49D51E2136af95646527263bACbA004eb4884',
-// }
-const dogeBakeBlpAddress: { [name: string]: string } = {
-  bsct: '0x68Aa35f3C1eB54a9541A77a408C69A526E28E63a',
-  bsc: '0xdb2d83eD108E68cc1C9689081d54673Bd9402A54',
-}
-const petBakeBlpAddress: { [name: string]: string } = {
-  bsct: '0x1699bCe1AE94fE00226329dcbBe5FE006CAF3D59',
-  bsc: '0x6F72943c807BdFaC19bAE25E84B8E99Fee0305FC',
-}
 const bakeBnbBlpAddress: { [name: string]: string } = {
   bsct: '0x47d34Fd4f095767E718F110AfEf030bb18E8C48F',
   bsc: '0xc2Eed0F5a0dc28cfa895084bC0a9B8B8279aE492',
 }
-const bakeBusdBlpAddress: { [name: string]: string } = {
-  bsct: '0xF5BE5d0e9d43280408f3C8d3Cc5e2F4D55C1887E',
-  bsc: '0x6E218EA042BeF40a8baF706b00d0f0A7b4fCE50a',
-}
 const busdBnbBlpAddress: { [name: string]: string } = {
   bsct: '0xAf5e8AA68dd1b61376aC4F6fa4D06A5A4AB6cafD',
   bsc: '0x559e3D9611E9cB8a77c11335Bdac49621382188B',
-}
-const usdtBusdBlpAddress: { [name: string]: string } = {
-  bsct: '0x05d08eAa0D769037005b529BfFCA63484A74BfB2',
-  bsc: '0xbcF3278098417E23d941613ce36a7cE9428724A5',
-}
-const busdUsdcBlpAddress: { [name: string]: string } = {
-  bsct: '0xA29122631a683EeFe5696F678e9DDbFA5415a537',
-  bsc: '0x56CDE265aaD310e623C8f8994a5143582659aBfC',
 }
 const ethBnbBlpAddress: { [name: string]: string } = {
   bsct: '0x6f469DAE7F333EdfC98c6057F12E2A7521a9861c',
@@ -254,93 +214,102 @@ describe('EarnBakeCommonMaster', () => {
   })
 
   it('add', async () => {
-    // let tx = await commonMaster.add(21, bakeAddress[network.name], false)
-    // console.log(`add ${tx.hash}`)
-    // await tx.wait()
-    // console.log(`add done`)
-    // bakeBatBlpAddress
-    let tx = await commonMaster.add(1, usdtBnbBlpAddress[network.name], false)
-    console.log(`add ${tx.hash}`)
-    await tx.wait()
-    tx = await commonMaster.add(1, tokauBnbBlpAddress[network.name], false)
+    let tx = await commonMaster.add(200, bakeBnbBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, barkDoggyBlpAddress[network.name], false)
+    tx = await commonMaster.add(30, busdBnbBlpAddress[network.name], false)
+    console.log(`add ${tx.hash}`)
+    await tx.wait()
+    tx = await commonMaster.add(10, ethBnbBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(3, doggyBnbBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, btcBnbBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, carBnbBlpAddress[network.name], false)
+    tx = await commonMaster.add(200, bakeAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, carAddress[network.name], false)
+    tx = await commonMaster.add(200, comboNFTCommonStakeERC721EarnBake[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, tctBusdBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, soccerAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, pokerBnbBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, bakerySoccerCommonStakeERC721EarnBakeAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, pokerAddress[network.name], false)
+    tx = await commonMaster.add(10, pokerBnbBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, soccerBakeBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, pokerAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, soccerAddress[network.name], false)
+    tx = await commonMaster.add(10, carBnbBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, dogeBakeBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, carAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, petBakeBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, carNFTCommonStakeERC721EarnBakeAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(30, bakeBnbBlpAddress[network.name], false)
+    tx = await commonMaster.add(30, doggyBnbBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(8, bakeBusdBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, doggyNFTCommonStakeERC721EarnBakeAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(3, busdBnbBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, barkDoggyBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(2, usdtBusdBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, barkingNFTCommonStakeERC721EarnBakeAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(36, busdUsdcBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, tokauBnbBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(1, ethBnbBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, pokerCardCommonStakeERC721EarnBakeAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
-    tx = await commonMaster.add(35, btcBnbBlpAddress[network.name], false)
+    tx = await commonMaster.add(10, doggyEquipmentCommonStakeERC721EarnBakeAddress[network.name], false)
+    console.log(`add ${tx.hash}`)
+    await tx.wait()
+    console.log(`add done`)
+    tx = await commonMaster.add(10, gatBnbBlpAddress[network.name], false)
+    console.log(`add ${tx.hash}`)
+    await tx.wait()
+    console.log(`add done`)
+    tx = await commonMaster.add(10, bakeMuskMixerCommonStakeERC721EarnBakeAddress[network.name], false)
+    console.log(`add ${tx.hash}`)
+    await tx.wait()
+    console.log(`add done`)
+    tx = await commonMaster.add(10, usdtBnbBlpAddress[network.name], false)
+    console.log(`add ${tx.hash}`)
+    await tx.wait()
+    console.log(`add done`)
+    tx = await commonMaster.add(10, soccerBnbBlpAddress[network.name], false)
     console.log(`add ${tx.hash}`)
     await tx.wait()
     console.log(`add done`)
     /**
-     add 0x1fb30f4d4c20db7a909524225209c154966b405854dad4b6c930b6a169035d05
-     add done
      */
   })
 
@@ -390,15 +359,6 @@ describe('EarnBakeCommonMaster', () => {
     const totalToBeMintAmount = await commonMaster.totalToBeMintAmount()
     const tokenPerBlock = await commonMaster.tokenPerBlock()
     console.log(`info ${mintedAmount} ${totalToBeMintAmount} ${tokenPerBlock}`)
-    /**
-     */
-  })
-
-  it('withdrawUnMintToken', async () => {
-    let tx = await commonMaster.withdrawUnMintToken('0x8E7857ef53560d6F4Fa144FB4Af4527c1AabeA95')
-    console.log(`withdrawUnMintToken ${tx.hash}`)
-    await tx.wait()
-    console.log(`withdrawUnMintToken done`)
     /**
      */
   })

@@ -34,7 +34,8 @@ describe('CommonMasterFactory', () => {
     const createCommonMasterTx = await commonMasterFactory.createCommonMaster(
         BAKE[network.name],
       BigNumber.from(10953612),
-      BigNumber.from(1000).mul(BigNumber.from(10).pow(18)).div(28800),
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18)).div(28800),
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18)).div(28800),
       BigNumber.from(1000).mul(50).mul(BigNumber.from(10).pow(18)),
     )
     console.log(`createEarnBake2.0CommonMaster ${createCommonMasterTx.hash}`)
