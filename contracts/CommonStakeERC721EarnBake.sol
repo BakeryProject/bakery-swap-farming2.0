@@ -10,12 +10,20 @@ import '@openzeppelin/contracts/token/ERC721/ERC721Holder.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/Pausable.sol';
 import '@openzeppelin/contracts/utils/EnumerableSet.sol';
+import '@openzeppelin/contracts/utils/ReentrancyGuard.sol';
 
 import './ICommonStakeERC721EarnBake.sol';
 import './ICommonMaster.sol';
 import './IGetStakingPower.sol';
 
-contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable, ERC721Holder, Pausable {
+contract CommonStakeERC721EarnBake is
+    ICommonStakeERC721EarnBake,
+    ERC20,
+    Ownable,
+    ERC721Holder,
+    Pausable,
+    ReentrancyGuard
+{
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
     using Address for address;
@@ -108,7 +116,7 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
         userInfo.rewardDebt = userInfo.stakingPower.mul(accBakePerShare).div(accBakePerShareMultiple);
     }
 
-    function stake(uint256 _tokenId) public override whenNotPaused {
+    function stake(uint256 _tokenId) public override nonReentrant whenNotPaused {
         UserInfo storage userInfo = _userInfoMap[_msgSender()];
         _harvest(userInfo);
         uint256 stakingPower = getStakingPower(_tokenId);
@@ -133,7 +141,7 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
         }
     }
 
-    function unstake(uint256 _tokenId) public override {
+    function unstake(uint256 _tokenId) public override nonReentrant {
         require(_stakingTokens[_msgSender()].contains(_tokenId), 'UNSTAKE FORBIDDEN');
         UserInfo storage userInfo = _userInfoMap[_msgSender()];
         _harvest(userInfo);
@@ -179,7 +187,7 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
         _unpause();
     }
 
-    function emergencyUnstake(uint256 _tokenId) external override {
+    function emergencyUnstake(uint256 _tokenId) external override nonReentrant {
         require(_stakingTokens[_msgSender()].contains(_tokenId), 'EMERGENCY UNSTAKE FORBIDDEN');
         UserInfo storage userInfo = _userInfoMap[_msgSender()];
         uint256 stakingPower = getStakingPower(_tokenId);
@@ -191,7 +199,7 @@ contract CommonStakeERC721EarnBake is ICommonStakeERC721EarnBake, ERC20, Ownable
         emit EmergencyUnstake(_msgSender(), _tokenId, stakingPower);
     }
 
-    function emergencyUnstakeAllFromBake(uint256 _amount) external override onlyOwner whenPaused {
+    function emergencyUnstakeAllFromBake(uint256 _amount) external override nonReentrant onlyOwner whenPaused {
         bakeryMaster.emergencyUnstake(address(this), _amount);
         emit EmergencyUnstakeAllFromBake(_msgSender(), _amount);
     }
