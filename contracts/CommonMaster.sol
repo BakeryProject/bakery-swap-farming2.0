@@ -6,11 +6,12 @@ import '@openzeppelin/contracts/math/SafeMath.sol';
 import '@openzeppelin/contracts/math/Math.sol';
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
-import '@openzeppelin/contracts/utils/Pausable.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/utils/Pausable.sol';
+import '@openzeppelin/contracts/utils/ReentrancyGuard.sol';
 import './ICommonMaster.sol';
 
-contract CommonMaster is ICommonMaster, Pausable, Ownable {
+contract CommonMaster is ICommonMaster, Pausable, Ownable, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for ERC20;
     // Info of each user.
@@ -52,14 +53,12 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
         address _token,
         uint256 _startBlock,
         uint256 _tokenPerBlock,
-        uint256 _maxTokenPerBlock,
-        uint256 _totalToBeMintAmount
+        uint256 _maxTokenPerBlock
     ) public {
         token = ERC20(_token);
         startBlock = _startBlock;
         tokenPerBlock = _tokenPerBlock;
         maxTokenPerBlock = _maxTokenPerBlock;
-        totalToBeMintAmount = _totalToBeMintAmount;
     }
 
     function setStartBlock(uint256 _startBlock) public onlyOwner {
@@ -96,16 +95,10 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
     }
 
     // Update the given pool's TOKEN allocation point. Can only be called by the owner.
-    function set(
-        address _pair,
-        uint256 _allocPoint,
-        bool _withUpdate
-    ) external override onlyOwner {
-        if (_withUpdate) {
-            massUpdatePools();
-        }
+    function set(address _pair, uint256 _allocPoint) external override onlyOwner {
         PoolInfo storage pool = poolInfoMap[_pair];
         require(pool.exists, 'POOL NOT EXISTS');
+        massUpdatePools();
         totalAllocPoint = totalAllocPoint.sub(pool.allocPoint).add(_allocPoint);
         pool.allocPoint = _allocPoint;
     }
@@ -122,14 +115,17 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
 
     function setTokenPerBlock(uint256 _tokenPerBlock) external override onlyOwner {
         require(tokenPerBlock != _tokenPerBlock && _tokenPerBlock <= maxTokenPerBlock, 'FORBIDDEN');
+        massUpdatePools();
         emit SetTokenPerBlock(msg.sender, _tokenPerBlock);
         tokenPerBlock = _tokenPerBlock;
     }
 
-    function setTotalToBeMintAmount(uint256 _totalToBeMintAmount) external override onlyOwner {
-        require(totalToBeMintAmount != _totalToBeMintAmount, 'NOT NEED UPDATE');
-        emit SetTotalToBeMintAmount(msg.sender, totalToBeMintAmount, _totalToBeMintAmount);
-        totalToBeMintAmount = _totalToBeMintAmount;
+    function addTotalToBeMintAmount(uint256 _pendingTotalToBeMintAmount) external override onlyOwner {
+        require(_pendingTotalToBeMintAmount != 0);
+        massUpdatePools();
+        token.safeTransferFrom(msg.sender, address(this), _pendingTotalToBeMintAmount);
+        totalToBeMintAmount = totalToBeMintAmount.add(_pendingTotalToBeMintAmount);
+        emit AddTotalToBeMintAmount(msg.sender, _pendingTotalToBeMintAmount, totalToBeMintAmount);
     }
 
     // Return total reward over the given _from to _to block.
@@ -201,7 +197,7 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
     }
 
     // Stake LP tokens to TokenMaster for TOKEN allocation.
-    function stake(address _pair, uint256 _amount) external override whenNotPaused {
+    function stake(address _pair, uint256 _amount) external override nonReentrant whenNotPaused {
         PoolInfo storage pool = poolInfoMap[_pair];
         UserInfo storage userInfo = poolUserInfoMap[_pair][msg.sender];
         updatePool(_pair);
@@ -218,7 +214,7 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
             }
         }
         if (_amount != 0) {
-            ERC20(_pair).safeTransferFrom(address(msg.sender), address(this), _amount);
+            ERC20(_pair).safeTransferFrom(msg.sender, address(this), _amount);
             userInfo.amount = userInfo.amount.add(_amount);
         }
         userInfo.rewardDebt = userInfo
@@ -231,7 +227,7 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
     }
 
     // Unstake LP tokens from TokenMaster.
-    function unstake(address _pair, uint256 _amount) external override {
+    function unstake(address _pair, uint256 _amount) external override nonReentrant {
         PoolInfo storage pool = poolInfoMap[_pair];
         UserInfo storage userInfo = poolUserInfoMap[_pair][msg.sender];
         require(userInfo.amount >= _amount, 'WITHDRAW: NOT GOOD');
@@ -248,7 +244,7 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
         }
         if (_amount != 0) {
             userInfo.amount = userInfo.amount.sub(_amount);
-            ERC20(_pair).safeTransfer(address(msg.sender), _amount);
+            ERC20(_pair).safeTransfer(msg.sender, _amount);
         }
         userInfo.rewardDebt = userInfo
             .amount
@@ -260,15 +256,16 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable {
     }
 
     // Unstake without caring about rewards. EMERGENCY ONLY.
-    function emergencyUnstake(address _pair, uint256 _amount) external override {
-        UserInfo storage userInfo = poolUserInfoMap[_pair][msg.sender];
+    function emergencyUnstake(address _pair, uint256 _amount) external override nonReentrant {
         PoolInfo memory pool = poolInfoMap[_pair];
+        require(pool.exists, 'POOL NOT EXISTS');
+        UserInfo storage userInfo = poolUserInfoMap[_pair][msg.sender];
         if (_amount == 0) {
             _amount = userInfo.amount;
         } else {
             _amount = Math.min(_amount, userInfo.amount);
         }
-        ERC20(_pair).safeTransfer(address(msg.sender), _amount);
+        ERC20(_pair).safeTransfer(msg.sender, _amount);
         emit EmergencyUnstake(msg.sender, _pair, _amount);
         if (_amount == userInfo.amount) {
             delete poolUserInfoMap[_pair][msg.sender];

@@ -160,10 +160,10 @@ describe('EarnBakeCommonMaster', () => {
      */
   })
 
-  it('setTotalToBeMintAmount', async () => {
+  it('addTotalToBeMintAmount', async () => {
     const totalToBeMintAmount = await commonMaster.totalToBeMintAmount()
-    const setTotalToBeMintAmountTx = await commonMaster.setTotalToBeMintAmount(totalToBeMintAmount.add(totalToBeMintAmount))
-    console.log(`setTotalToBeMintAmount ${setTotalToBeMintAmountTx.hash}`)
+    const tx = await commonMaster.addTotalToBeMintAmount(totalToBeMintAmount.add(totalToBeMintAmount))
+    console.log(`addTotalToBeMintAmount ${tx.hash}`)
     /**
      */
   })
@@ -314,7 +314,7 @@ describe('EarnBakeCommonMaster', () => {
   })
 
   it('set', async () => {
-    let tx = await commonMaster.set(bakeAddress[network.name], 21, false)
+    let tx = await commonMaster.set(bakeAddress[network.name], 21)
     console.log(`set ${tx.hash}`)
     await tx.wait()
     console.log(`set done`)

@@ -5,7 +5,7 @@ interface ICommonMaster {
     event Unstake(address indexed user, address indexed poolAddress, uint256 amount);
     event EmergencyUnstake(address indexed user, address indexed poolAddress, uint256 amount);
     event SetTokenPerBlock(address indexed user, uint256 tokenPerBlock);
-    event SetTotalToBeMintAmount(address indexed user, uint256 oldTotalToBeMintAmount, uint256 newTotalToBeMintAmount);
+    event AddTotalToBeMintAmount(address indexed user, uint256 pendingTotalToBeMintAmount, uint256 totalToBeMintAmount);
 
     // *** POOL MANAGER ***
     function poolLength() external view returns (uint256);
@@ -19,11 +19,7 @@ interface ICommonMaster {
     ) external;
 
     // Update the given pool's TOKEN allocation point. Can only be called by the owner.
-    function set(
-        address _pair,
-        uint256 _allocPoint,
-        bool _withUpdate
-    ) external;
+    function set(address _pair, uint256 _allocPoint) external;
 
     function setLastRewardBlock(address _pair, uint256 _lastRewardBlock) external;
 
@@ -56,5 +52,5 @@ interface ICommonMaster {
 
     function setTokenPerBlock(uint256 _tokenPerBlock) external;
 
-    function setTotalToBeMintAmount(uint256 _totalToBeMintAmount) external;
+    function addTotalToBeMintAmount(uint256 _pendingTotalToBeMintAmount) external;
 }

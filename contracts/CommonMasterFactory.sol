@@ -14,16 +14,9 @@ contract CommonMasterFactory is Ownable {
         address _token,
         uint256 _startBlock,
         uint256 _tokenPerBlock,
-        uint256 _maxTokenPerBlock,
-        uint256 _totalToBeMintAmount
+        uint256 _maxTokenPerBlock
     ) external onlyOwner returns (address) {
-        CommonMaster commonMaster = new CommonMaster(
-            _token,
-            _startBlock,
-            _tokenPerBlock,
-            _maxTokenPerBlock,
-            _totalToBeMintAmount
-        );
+        CommonMaster commonMaster = new CommonMaster(_token, _startBlock, _tokenPerBlock, _maxTokenPerBlock);
         Ownable(address(commonMaster)).transferOwnership(_msgSender());
         emit CommonMasterCreated(address(commonMaster));
         return address(commonMaster);
