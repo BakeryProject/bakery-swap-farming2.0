@@ -284,9 +284,9 @@ contract CommonMaster is ICommonMaster, Pausable, Ownable, ReentrancyGuard {
     function safeTokenTransfer(address _to, uint256 _amount) internal {
         uint256 tokenBal = token.balanceOf(address(this));
         if (_amount > tokenBal) {
-            token.transfer(_to, tokenBal);
+            token.safeTransfer(_to, tokenBal);
         } else {
-            token.transfer(_to, _amount);
+            token.safeTransfer(_to, _amount);
         }
     }
 
